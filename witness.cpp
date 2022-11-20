@@ -3,9 +3,7 @@
 
 using namespace std;
 
-const int ITERATIONS = 4;
-
-bool isPrime(long long n, int k);
+long long isPrime(long long n);
 bool millerRabin(long long n, long long d, long long a);
 long long fast_exp(long long base, long long exp, long long mod);
 
@@ -33,46 +31,47 @@ int main()
 	long long int n;
 
 	fin >> n;
-	while (n != -1)
+	while (n > 2)
 	{
-		if(isPrime(n, ITERATIONS))
+		long long w = isPrime(n);
+		if(w == 0)
 			fout << n << " is prime" << endl;
 		else
-			fout << n << " " <<  0 << endl;
+			fout << n << " " <<  (n-w-3) << endl;
 		fin >> n;
 	}
 }
 
-bool isPrime(long long n, int k)
+/*
+Returns number of witnesses, prime numbers have none
+*/
+long long isPrime(long long n)
 {
-	cout << "testing " << n << endl;
-	if(n == 1) return false;
-	if(n <= 3) return true;
-	if(n % 2 == 0) return false;
+	if(n == 1) return 1; // false
+	if(n <= 3) return 0; // true
 
 	int d = n-1;
 	while(d % 2 == 0)
 		d /= 2;
 
-	bool prime = true;
+	long long w = 0;
 	
 	for(int a = 2; a <= n-2; a++)
 	{
 		if(!millerRabin(n, d, a))
 		{
-			prime = false;
+			w++;
 		}
 	}
 	
-	return prime;
+	return w;
 }
 
-// false means n is composite and a is a witness
+/*
+Returns false if n is composite, meaning a is a witness
+*/
 bool millerRabin(long long n, long long d, long long a)
 {
-	// a random in range [2, n-2]
-	// long long a = 2 + rand() % (n-4);
-
 	// x = a^d % n
 	long long x = fast_exp(a, d, n);
 
@@ -97,7 +96,7 @@ long long fast_exp(long long base, long long exp, long long mod)
 	if(exp == 0)
 		return 1;
 	
-	if(exp & 1)
+	if(exp & 1) // if odd
 		return (base * fast_exp(base, exp-1, mod)) % mod;
 	
 	long long a = fast_exp(base, exp/2, mod);
