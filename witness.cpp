@@ -6,7 +6,7 @@ using namespace std;
 const int ITERATIONS = 4;
 
 bool isPrime(long long n, int k);
-bool millerRabin(long long n, long long d);
+bool millerRabin(long long n, long long d, long long a);
 long long fast_exp(long long base, long long exp, long long mod);
 
 int main()
@@ -36,13 +36,16 @@ int main()
 	while (n != -1)
 	{
 		if(isPrime(n, ITERATIONS))
-			cout << n << endl;
+			fout << n << " is prime" << endl;
+		else
+			fout << n << " " <<  0 << endl;
 		fin >> n;
 	}
 }
 
 bool isPrime(long long n, int k)
 {
+	cout << "testing " << n << endl;
 	if(n == 1) return false;
 	if(n <= 3) return true;
 	if(n % 2 == 0) return false;
@@ -50,18 +53,25 @@ bool isPrime(long long n, int k)
 	int d = n-1;
 	while(d % 2 == 0)
 		d /= 2;
+
+	bool prime = true;
 	
-	for(int i = 0; i < k; i++)
-		if(!millerRabin(n, d))
-			return false;
+	for(int a = 2; a <= n-2; a++)
+	{
+		if(!millerRabin(n, d, a))
+		{
+			prime = false;
+		}
+	}
 	
-	return true;
+	return prime;
 }
 
-bool millerRabin(long long n, long long d)
+// false means n is composite and a is a witness
+bool millerRabin(long long n, long long d, long long a)
 {
 	// a random in range [2, n-2]
-	long long a = 2 + rand() % (n-4);
+	// long long a = 2 + rand() % (n-4);
 
 	// x = a^d % n
 	long long x = fast_exp(a, d, n);
