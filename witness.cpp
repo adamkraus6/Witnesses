@@ -10,15 +10,15 @@ long long fast_exp(long long base, long long exp, long long mod);
 int main()
 {
 	ifstream fin("witness.in");
-	ofstream fout("witness.out");
 
 	if(!fin)
 	{
 		cout << "Bad witness.in" << endl;
 		fin.close();
-		fout.close();
 		return -1;
 	}
+
+	ofstream fout("witness.out");
 
 	if(!fout)
 	{
@@ -40,6 +40,9 @@ int main()
 			fout << n << " " <<  (n-w-3) << endl;
 		fin >> n;
 	}
+
+	fin.close();
+	fout.close();
 }
 
 /*
@@ -88,9 +91,11 @@ bool millerRabin(long long n, long long d, long long a)
 	}
 
 	return false;
-	
 }
 
+/*
+Fast exponentiation algorithm
+*/
 long long fast_exp(long long base, long long exp, long long mod)
 {
 	if(exp == 0)
