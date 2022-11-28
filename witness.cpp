@@ -3,6 +3,7 @@
 
 using namespace std;
 
+bool isWitness(long long a, long long n);
 long long isPrime(long long n);
 bool millerRabin(long long n, long long d, long long a);
 long long fast_exp(long long base, long long exp, long long mod);
@@ -61,7 +62,7 @@ long long isPrime(long long n)
 	
 	for(int a = 2; a <= n-2; a++)
 	{
-		if(!millerRabin(n, d, a))
+		if(isWitness(a, n))
 		{
 			w++;
 		}
@@ -71,25 +72,34 @@ long long isPrime(long long n)
 }
 
 /*
-Returns false if n is composite, meaning a is a witness
+Returns true if a is a witness to n being composite
 */
-bool millerRabin(long long n, long long d, long long a)
+bool isWitness(long long a, long long n)
 {
-	// x = a^d % n
-	long long x = fast_exp(a, d, n);
+	// need t, u such that u is odd, and 2^t * u = n-1
+	long long u = n-1;
+	long long t = 0;
 
-	if(x == 1 || x == n-1)
-		return true;
-	
-	while(d != n-1)
+	// while u still odd
+	while(u % 2 == 0)
 	{
-		x = (x*x) % n;
-		d *= 2;
-
-		if(x == 1) return false;
-		if(x == n-1) return true;
+		u /= 2;
+		t += 1;
 	}
 
+	long long x = fast_exp(a, u, n);
+
+	for(int i = 0; i < t; i++)
+	{
+		long long old_x = x;
+		x = (x*x) % n;
+		if(x == 1 && old_x != 1 && old_x != n-1)
+			return true;
+	}
+
+	if(x != 1)
+		return true;
+	
 	return false;
 }
 
