@@ -1,3 +1,4 @@
+// Adam Kraus
 #include <fstream>
 #include <iostream>
 
@@ -53,10 +54,6 @@ long long isPrime(long long n)
 {
 	if(n == 1) return 1; // false
 	if(n <= 3) return 0; // true
-
-	int d = n-1;
-	while(d % 2 == 0)
-		d /= 2;
 
 	long long w = 0;
 	
