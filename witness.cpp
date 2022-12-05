@@ -55,6 +55,8 @@ long long isPrime(long long n)
 	if(n == 1) return 1; // false
 	if(n <= 3) return 0; // true
 
+	if(n > 2147483647) return 0; // prime (not really)
+
 	long long w = 0;
 	
 	for(int a = 2; a <= n-2; a++)
